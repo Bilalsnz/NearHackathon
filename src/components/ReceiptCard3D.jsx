@@ -10,8 +10,8 @@ export default function ReceiptCard3D({ report, identifier }) {
   const proof = JSON.stringify(report, null, 2);
   const notify = async (label, value) => { try { await navigator.clipboard.writeText(value); setToast(label); setTimeout(() => setToast(''), 1800); } catch { setToast('Clipboard unavailable'); } };
   const download = () => { const blob = new Blob([proof], { type: 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = `receipt-${String(identifier).slice(0,12)}.json`; a.click(); URL.revokeObjectURL(url); };
-  const hash = report.evidence.destinationTxs?.[0] || report.evidence.originTxs?.[0] || report.evidence.nearTxs?.[0];
-  const explorer = hash?.startsWith('0x') ? `https://etherscan.io/tx/${hash}` : hash ? `https://nearblocks.io/txns/${hash}` : report.evidence.depositAddress ? `https://explorer.near-intents.org/` : null;
+  const txDetail = report.evidence.destinationTxs?.[0] || report.evidence.originTxs?.[0] || report.evidence.nearTxs?.[0];
+  const explorer = txDetail?.explorerUrl || null;
   const warning = report.integrityLevel !== 'CLEAN';
   return <div className="receipt-parent">
     <div className={`receipt-card ${warning ? 'warning' : 'clean'} ${tilted ? 'is-tilted' : ''}`} onClick={() => setTilted(v => !v)} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && setTilted(v => !v)} aria-label="Toggle receipt card tilt">
