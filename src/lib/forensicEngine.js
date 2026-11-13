@@ -36,7 +36,11 @@ export function buildForensicReport(tx) {
   if (present(tx.refundFee)) fees.push({ label: 'Refund fee (API-reported)', amount: tx.refundFee, source: 'VERIFIED' });
   const feeBreakdownStatus = fees.length ? 'PARTIAL' : 'UNEXPOSED';
   const sameAsset = present(tx.destinationAsset) && expectedOutput.symbol === actualOutput.symbol;
-  const deltaAmount = expectedKnown && outputKnown && sameAsset ? exactDelta(expectedOutput.amount, actualOutput.amount) : null;
+  const comparableFormatted = present(tx.expectedOut) && present(tx.amountOut);
+  const comparableRaw = !comparableFormatted && present(tx.expectedOutRaw) && present(tx.amountOutRaw);
+  const deltaAmount = expectedKnown && outputKnown && sameAsset && (comparableFormatted || comparableRaw)
+    ? exactDelta(comparableFormatted ? tx.expectedOut : tx.expectedOutRaw, comparableFormatted ? tx.amountOut : tx.amountOutRaw)
+    : null;
   const deltaPercentage = deltaAmount !== null && Number(expectedOutput.amount) !== 0 ? Number(deltaAmount) / Number(expectedOutput.amount) * 100 : null;
   const negativeDelta = deltaAmount !== null && Number(deltaAmount) > 0;
   const originHash = tx.originTxs?.[0];
@@ -48,7 +52,7 @@ export function buildForensicReport(tx) {
   ];
   const hasDiscrepancy = negativeDelta || feeBreakdownStatus === 'UNEXPOSED';
   const missingCore = !inputKnown || !outputKnown || !tx.originAsset || !tx.destinationAsset;
-  const integrityLevel = negativeDelta ? 'DISCREPANCY_DETECTED' : (missingCore || !expectedKnown || feeBreakdownStatus !== 'PARTIAL' ? 'INCOMPLETE_DATA' : 'CLEAN');
+  const integrityLevel = negativeDelta ? 'DISCREPANCY_DETECTED' : (missingCore || !expectedKnown || feeBreakdownStatus !== 'COMPLETE' ? 'INCOMPLETE_DATA' : 'CLEAN');
   const notes = [];
   if (!expectedKnown) notes.push('A quoted expected-output amount was not returned, so expected-versus-actual delta cannot be calculated.');
   else if (!outputKnown) notes.push('The quote output is available, but an actual settled output amount is not exposed yet.');
