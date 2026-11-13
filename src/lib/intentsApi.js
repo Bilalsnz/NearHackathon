@@ -67,9 +67,17 @@ async function lookupExplorer(identifier) {
   const rows = await requestJson(url.toString());
   const list = Array.isArray(rows) ? rows : (rows?.transactions ?? rows?.items ?? []);
   if (!list.length) throw new Error('Explorer returned no matching transactions.');
-  const row = list.find(r => r.depositAddress === identifier || r.depositAddressAndMemo === identifier || r.intentHashes === identifier ||
-    [...arr(r.originChainTxHashes), ...arr(r.destinationChainTxHashes), ...arr(r.nearTxHashes)].some(x => (typeof x === 'string' ? x : x?.hash) === identifier)) ?? list[0];
-  return normalizeExplorer(row);
+  const matches = list.filter(r => {
+    const hashes = [...arr(r.originChainTxHashes), ...arr(r.destinationChainTxHashes), ...arr(r.nearTxHashes)];
+    const values = [r.depositAddress, r.depositAddressAndMemo, r.intentHashes, r.recipient, ...arr(r.senders), ...hashes.map(x => typeof x === 'string' ? x : x?.hash)].filter(Boolean);
+    return values.some(value => String(value).toLowerCase() === identifier.toLowerCase());
+  });
+  if (matches.length !== 1) {
+    throw new Error(matches.length > 1
+      ? 'The Explorer returned multiple exact matches. Use the deposit address or memo to narrow the lookup.'
+      : 'The Explorer search results did not contain an exact identifier match. No unrelated transaction was selected.');
+  }
+  return normalizeExplorer(matches[0]);
 }
 async function lookupOneClick(identifier) {
   const url = new URL(ONE_CLICK);
