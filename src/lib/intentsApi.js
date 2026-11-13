@@ -36,7 +36,7 @@ function normalizeExplorer(row) {
     appFees: arr(row.appFees ?? row.app_fees), refundFee: first(row.refundFeeFormatted, row.refund_fee_formatted),
     originTxs: txDetails(first(row.originChainTxHashes, row.origin_chain_tx_hashes)),
     destinationTxs: txDetails(first(row.destinationChainTxHashes, row.destination_chain_tx_hashes)),
-    nearTxs: txDetails(first(row.nearTxHashes, row.near_tx_hashes)),
+    nearTxs: txDetails(first(row.nearTxHashes, row.near_tx_hashes)).map(tx => ({ ...tx, explorerUrl: tx.explorerUrl || `https://nearblocks.io/txns/${tx.hash}` })),
     refundReason: row.refundReason ?? null,
   };
 }
@@ -57,7 +57,7 @@ function normalizeOneClick(row) {
     amountOutUsd: d.amountOutUsd ?? null,
     appFees: [], refundFee: first(d.refundFeeFormatted),
     originTxs: txDetails(d.originChainTxHashes), destinationTxs: txDetails(d.destinationChainTxHashes),
-    nearTxs: txDetails(d.nearTxHashes), refundReason: d.refundReason ?? null,
+    nearTxs: txDetails(d.nearTxHashes).map(tx => ({ ...tx, explorerUrl: tx.explorerUrl || `https://nearblocks.io/txns/${tx.hash}` })), refundReason: d.refundReason ?? null,
   };
 }
 async function lookupExplorer(identifier) {
