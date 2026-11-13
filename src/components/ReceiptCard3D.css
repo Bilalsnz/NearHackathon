@@ -1,0 +1,34 @@
+.receipt-parent { width: min(100%, 340px); height: 320px; perspective: 1000px; margin: auto; }
+.receipt-card { position:relative; height:100%; border-radius:42px; transition:all .5s ease-in-out; transform-style:preserve-3d; box-shadow:rgba(5,71,17,.18) 0 25px 25px -5px; cursor:pointer; overflow:visible; }
+.receipt-card.clean { background:linear-gradient(135deg,rgb(0,255,214),rgb(8,226,96)); }
+.receipt-card.warning { background:linear-gradient(135deg,rgb(255,184,0),rgb(255,94,58)); }
+.receipt-glass { position:absolute; inset:8px; border-radius:48px; border-top-right-radius:100%; background:linear-gradient(0deg,rgba(255,255,255,.32),rgba(255,255,255,.78)); transform:translate3d(0,0,25px); border-left:1px solid white; border-bottom:1px solid white; }
+.receipt-content { position:relative; z-index:1; padding:105px 25px 0 28px; transform:translate3d(0,0,26px); }
+.receipt-content .title { display:block; color:#064b37; font:900 16px 'IBM Plex Mono',monospace; overflow-wrap:anywhere; }
+.receipt-content .text { display:block; color:rgba(0,65,48,.92); font:600 12px 'IBM Plex Mono',monospace; margin-top:12px; line-height:1.7; }
+.receipt-status { display:inline-block; margin-top:10px; color:#064b37; font:700 9px 'IBM Plex Mono',monospace; letter-spacing:.08em; }
+.receipt-logo { position:absolute; right:0; top:0; transform-style:preserve-3d; z-index:2; }
+.receipt-logo .circle { display:block; position:absolute; aspect-ratio:1; border-radius:50%; top:0; right:0; background:rgba(255,255,255,.18); backdrop-filter:blur(5px); box-shadow:rgba(100,100,111,.2) -10px 10px 20px; transition:all .5s ease-in-out; }
+.receipt-logo .circle1 { width:170px; transform:translate3d(0,0,20px); top:8px; right:8px; }
+.receipt-logo .circle2 { width:140px; transform:translate3d(0,0,40px); top:10px; right:10px; transition-delay:.1s; }
+.receipt-logo .circle3 { width:110px; transform:translate3d(0,0,60px); top:17px; right:17px; transition-delay:.15s; }
+.receipt-logo .circle4 { width:80px; transform:translate3d(0,0,80px); top:23px; right:23px; transition-delay:.2s; }
+.receipt-logo .circle5 { width:50px; transform:translate3d(0,0,100px); top:30px; right:30px; display:grid; place-content:center; transition:.5s; }
+.receipt-logo .circle5 .svg { width:21px; color:white; }
+.receipt-bottom { position:absolute; z-index:3; bottom:18px; left:17px; right:17px; display:flex; align-items:center; justify-content:space-between; transform:translate3d(0,0,26px); }
+.social-buttons-container { display:flex; gap:9px; transform-style:preserve-3d; }
+.social-button { width:31px; height:31px; padding:6px; background:white; border-radius:50%; border:0; display:grid; place-content:center; cursor:pointer; box-shadow:rgba(5,71,17,.35) 0 7px 5px -5px; transition:transform .2s ease,box-shadow .2s ease; }
+.social-button .svg { width:15px; color:#00894d; }
+.social-button:hover { background:#07130f; } .social-button:hover .svg { color:white; }
+.social-button:disabled { opacity:.35; cursor:not-allowed; }
+.view-more { display:flex; align-items:center; gap:5px; }
+.view-more-button { background:none; border:0; color:#075a40; font:800 11px 'IBM Plex Mono',monospace; cursor:pointer; }
+.view-more > .svg { width:14px; color:#075a40; }
+.receipt-card:hover,.receipt-card.is-tilted { transform:rotate3d(1,1,0,18deg); box-shadow:rgba(5,71,17,.3) 25px 35px 25px -25px; }
+.receipt-card:hover .circle2,.receipt-card.is-tilted .circle2 { transform:translate3d(0,0,60px); }
+.receipt-card:hover .circle3,.receipt-card.is-tilted .circle3 { transform:translate3d(0,0,80px); }
+.receipt-card:hover .circle4,.receipt-card.is-tilted .circle4 { transform:translate3d(0,0,100px); }
+.receipt-card:hover .circle5,.receipt-card.is-tilted .circle5 { transform:translate3d(0,0,120px); }
+.receipt-card:hover .social-button,.receipt-card.is-tilted .social-button { transform:translate3d(0,0,35px); }
+.receipt-toast { display:flex; align-items:center; justify-content:center; gap:7px; color:#6ee7b7; font-size:12px; margin-top:10px; }
+@media(max-width:420px) { .receipt-parent { height:310px; } .receipt-content { padding-left:22px; } }
